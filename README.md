@@ -1,71 +1,118 @@
-plugin.video.surveillanceroom
+# SurveillanceRoom — Kodi Matrix/Nexus/Omega Fork
 
-a Kodi add-on by Maikito26
+[![Kodi Version](https://img.shields.io/badge/Kodi-19%20|%2020%20|%2021-blue.svg)](https://kodi.tv/)
+[![Python](https://img.shields.io/badge/Python-3.x-green.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-GPL--2.0-red.svg)](LICENSE)
 
--- Summary  --
+> **A powerful Kodi add-on for IP camera surveillance with motion detection and multi-camera support**
 
-If motion or sound is detected a small image preview will slide onto the screen. Pressing select *will* stop any playing media and open the main video feed with basic controls for pan/tilt and mirror/flip. Exit with the back button or click the close control, and the previously playing file will resume. This works for up to 4 cameras simultaneously
-Also, there is a menu to select these cameras individually or all of them to play at once.
+Originally developed by **Maikito26**, this community-maintained fork brings compatibility with modern Kodi versions (Matrix, Nexus, Omega), enhanced MJPEG stream handling, and robust support for multiple camera feeds with intelligent on-screen previews.
 
+---
 
--- Features --
+## 🎯 What It Does
 
-- Connect up to 4 IP/Foscam Cameras
-- Supports credentials for Foscam, but you can overwrite the URL manually to support non-Foscam cameras, or the C model which has RTSP port hard coded to 554.
-- Watch in multiple streaming formats, with camera controls displayed overtop of a single camera view.
-- Preview cameras while watching content, with Motion and Sound Detection, or by calling it manually using RunPlugin()
-- Open the camera stream from a preview, and will resume what you were watching when you close the stream.
-- Logic to determine when preview is allowed to display. Configure which windows not to display for.
-- Set a home location to move PTZ enabled Foscam cameras to when Kodi starts
+**Smart Motion Detection**: When motion or sound is detected, a small preview slides onto your screen without interrupting your current media. One click opens the full camera feed with controls.
 
+**Seamless Integration**: Your movie, show, or music automatically pauses for camera viewing and resumes exactly where you left off when you close the camera feed.
 
--- Quick Start Guide --
+**Multi-Camera Support**: Monitor up to **4 cameras simultaneously** with individual configuration and control options.
 
-1. Install the Kodi Add-on
-2. Open the add-on settings
-3. Configure the camera specific settings (additional configure preview settings if desired)
-4. Enable the camera that is configured
-5. Access the add-on through the Programs or Video add-on windows and view cameras
+---
 
+## ✨ Key Features
 
--- Calling commands from an External Source --
-You can call any action available in default.py and encoding it into the URL with the parameters:
-	action=
-	camera_number=
+- 🎯 **Modern Kodi Support**: Compatible with **Kodi 19 (Matrix)**, **20 (Nexus)**, and **21 (Omega)**
+- 📹 **Multi-Camera Setup**: Connect up to 4 IP cameras or Foscam-compatible devices
+- 🔐 **Flexible Authentication**: Supports Foscam credentials and manual URL overrides for RTSP streams (port 554)
+- 🎮 **Interactive Controls**: On-screen pan/tilt/zoom controls for compatible cameras
+- 👁️ **Smart Previews**: Motion/sound-triggered overlays or manual activation via `RunPlugin()`
+- ⏯️ **Auto-Resume**: Seamlessly returns to your media after camera viewing
+- ⚙️ **Configurable Logic**: Customize when previews are shown or disabled
+- 🏠 **PTZ Home Position**: Auto-position Foscam cameras at Kodi startup
+- 🔧 **Enhanced MJPEG**: Improved stream parsing, frame extraction, and camera compatibility
 
-Some example actions are:
+---
 
-1. Showing a single preview window
+## 🚀 Quick Start
 
-	XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=show_preview&camera_number=1)  
+1. **Install** the add-on in Kodi
+2. **Configure** camera settings in Add-on Settings
+3. **Enable** your configured cameras
+4. **Access** via **Programs** → **SurveillanceRoom** or **Video Add-ons**
+5. **Enjoy** automatic motion detection or manual camera viewing
 
-2. Showing all cameras on fullscreen
+---
 
-	XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=all_cameras)
+## 🎮 External Control (RunPlugin)
 
-3. Showing a single camera on fullscreen, with controls
-	
-	XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=single_camera&camera_number=1)
+Integrate with home automation, remote controls, or scripts:
 
-4. Showing a single camera on fullscreen, without controls
+### Camera Preview Commands
+```bash
+# Show preview overlay for camera 1
+XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=show_preview&camera_number=1)
 
-	XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=single_camera_no_controls&camera_number=1)
-	
-	
-Mapping a remote button example:
+# View all cameras in grid layout
+XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=all_cameras)
 
-	<blue>XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=show_preview&camera_number=1)</blue>
+# Single camera with PTZ controls
+XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=single_camera&camera_number=1)
 
-	
-	
-This add-on was developed in the following environment:
-- Windows 10
-- Kodi 15.2
-- Foscam HD Camers: F19831w & F19804p, with firmware v2.11.1.118
-- D-Link DCS-932L generic IP camera
+# Single camera, controls disabled
+XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=single_camera_no_controls&camera_number=1)
+```
 
+### Remote Control Integration
+```xml
+<!-- Example: Blue button shows camera 1 preview -->
+<blue>XBMC.RunPlugin(plugin://plugin.video.surveillanceroom?action=show_preview&camera_number=1)</blue>
+```
 
-Credit and thanks to the following add-ons/developers for inspiration and a lot of the groundwork:
- * https://github.com/LS80/script.foscam (http://forum.xbmc.org/showthread.php?tid=190439)
- * https://github.com/RyanMelenaNoesis/Xbmc...ecuritycam (http://forum.xbmc.org/showthread.php?tid=182540)
- * https://github.com/Shigoru/script.securitycams (http://forum.kodi.tv/showthread.php?tid=218815)
+---
+
+## 🖥️ Tested Environment
+
+### Current Development
+- **OS**: Debian 12
+- **Kodi**: v21 (Omega)
+- **Python**: 3.x
+
+### Legacy Compatibility  
+- **OS**: Windows 10
+- **Kodi**: v15.2+
+- **Cameras**: Foscam F19831w & F19804p (firmware v2.11.1.118), D-Link DCS-932L
+
+**Cross-Platform**: Tested and maintained for Linux, Windows, and other Kodi-supported platforms.
+
+---
+
+## 🤝 Credits & Acknowledgments
+
+### Core Contributors
+- **Original Developer**: [Maikito26](https://github.com/maikito26) — Created the foundational SurveillanceRoom plugin
+- **Matrix Porting**: **kodinerds.net** community (pünktchen, fritsch, and contributors)
+- **Community Discussion**: [kodinerds.net Matrix thread](https://www.kodinerds.net/thread/72131-plugin-video-surveillanceroom-f%C3%BCr-kodi-19-matrix/)
+- **This Fork**: Enhanced MJPEG handling, multi-version Kodi support, and ongoing maintenance
+
+### Inspiration & Groundwork
+- [script.foscam](https://github.com/LS80/script.foscam) — Foscam camera integration patterns
+- [XbmcSecuritycam](https://github.com/RyanMelenaNoesis/XbmcSecuritycam) — Security camera concepts
+- [script.securitycams](https://github.com/Shigoru/script.securitycams) — Multi-camera architecture ideas
+
+---
+
+## 📜 License
+
+This project maintains the same license as the original SurveillanceRoom plugin. See [LICENSE](LICENSE) for details.
+
+---
+
+## 🔗 Related Projects
+
+- **Upstream Repository**: [maikito26/plugin.video.surveillanceroom](https://github.com/maikito26/plugin.video.surveillanceroom)
+- **Community Discussion**: [kodinerds.net thread](https://www.kodinerds.net/thread/72131-plugin-video-surveillanceroom-f%C3%BCr-kodi-19-matrix/)
+
+---
+
+*Made with ❤️ by the Kodi community*
