@@ -198,23 +198,25 @@ def get_fanart(name_or_number, new_art_url = None, update = False):
 def get_mjpeg_frame(stream, filename):
     """ Extracts JPEG image from MJPEG """
    
-    line  = ''
+    line = b''  # Initialize as bytes
     try:
         x = 0
-        while not 'length' in line.lower():
-            if '500 - Internal Server Error' in line or x > 10:
+        while not b'length' in line.lower():  # Compare bytes with bytes
+            if b'500 - Internal Server Error' in line or x > 10:
                 return False
             #log(4, 'GETMJPEGFRAME: %s' %line)
-            line = stream.readline()
+            line = stream.readline()  # This returns bytes
             x += 1
             
-
-        bytes = int(line.split(':')[-1])
+        # Decode only when needed for parsing
+        line_str = line.decode('utf-8', errors='ignore')
+        bytes_count = int(line_str.split(':')[-1])
         
+        # Read remaining headers
         while len(line) > 3:
             line = stream.readline()
             
-        frame = stream.read(bytes)
+        frame = stream.read(bytes_count)
    
     except requests.RequestException as e:
         log(3, str(e))
