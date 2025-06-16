@@ -4,15 +4,18 @@ A Kodi Add-on by Maikito26
 
 Main Menu and External Functionality
 """
+from __future__ import absolute_import
 
-import sys, os, urllib
+from future import standard_library
+standard_library.install_aliases()
+import sys, os, urllib.request, urllib.parse, urllib.error
 import xbmc, xbmcgui, xbmcplugin, xbmcaddon, xbmcvfs
 from resources.lib import settings, monitor, allcameraplayer, cameraplayer, camerasettings, utils
 from resources.lib.ipcam_api_wrapper import CameraAPIWrapper as Camera
 
 __addon__ = xbmcaddon.Addon() 
 __addonid__ = __addon__.getAddonInfo('id') 
-_path = xbmc.translatePath(('special://home/addons/{0}').format(__addonid__)).decode('utf-8')                 
+_path = xbmcvfs.translatePath(('special://home/addons/{0}').format(__addonid__))                 
 
 
 def param_to_dict(parameters):
@@ -35,27 +38,26 @@ def addDirectoryItem(name, url = None, isFolder = False, icon = None, fanart = N
     Function which adds the directory line item into the Kodi navigation menu
     """
 
-    if li == None:
-        li = xbmcgui.ListItem(name)
+    listitem = xbmcgui.ListItem(name)
     
     if icon != None:
-        li.setIconImage(icon)
-        li.setArt({'thumb': icon,
+        listitem.setArt(icon)
+        listitem.setArt({'thumb': icon,
                    'poster': icon})
         
     if fanart != None:
-        li.setArt({'fanart': fanart,
+        listitem.setArt({'fanart': fanart,
                    'landscape': fanart})
         
-    li.setInfo(type = 'Video',
+    listitem.setInfo(type = 'Video',
                infoLabels = {'Title': name}) 
 
     if url == None:
-        url = sys.argv[0] + '?' + urllib.urlencode(parameters)
+        url = sys.argv[0] + '?' + urllib.parse.urlencode(parameters)
     
     return xbmcplugin.addDirectoryItem(handle = handle,
                                        url = url,
-                                       listitem = li,
+                                       listitem = listitem,
                                        isFolder = isFolder)
 
 

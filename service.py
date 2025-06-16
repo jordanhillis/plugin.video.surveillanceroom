@@ -5,9 +5,14 @@ A Kodi add-on by Maikito26
 
 Service loop which enables preview window capability
 """
+from __future__ import absolute_import
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+from builtins import object
 import xbmc, xbmcaddon, xbmcvfs
-import threading, time, os, Queue, sys
+import threading, time, os, queue, sys
 from resources.lib import monitor, camerapreview, settings, utils
 from resources.lib.ipcam_api_wrapper import CameraAPIWrapper as Camera
 
@@ -206,7 +211,7 @@ class service():
                                      
 
     def restart(self):
-        self.stop()
+        self.stop
         self.monitor.waitForAbort(2)                                     
         start()
 

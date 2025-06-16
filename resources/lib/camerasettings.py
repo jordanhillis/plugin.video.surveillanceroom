@@ -5,9 +5,10 @@ A Kodi add-on by Maikito26
 
 This module is used to draw a window that contains settings relevant to a Foscam HD camera
 """
+from __future__ import absolute_import
 
 import xbmc, xbmcgui, xbmcaddon
-import settings, utils
+from . import settings, utils
 import os
 from resources.lib.ipcam_api_wrapper import CameraAPIWrapper as Camera
 
@@ -44,7 +45,7 @@ ACTION_SELECT_ITEM = 7
 
 def _set_textures(textures, kwargs):
     """ Set texture arguments for controls. """
-    for texture in textures.keys():
+    for texture in list(textures.keys()):
         if kwargs.get(texture) is None:
             kwargs[texture] = textures[texture]
 

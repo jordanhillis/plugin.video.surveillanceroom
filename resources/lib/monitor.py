@@ -5,11 +5,13 @@ A Kodi add-on by Maikito26
 
 This module is used to monitor the entire add-on and allow communication between events outside of the main process loop
 """
+from __future__ import absolute_import
 
+from builtins import str
 import xbmc
 from xbmcgui import Window, getCurrentWindowId, getCurrentWindowDialogId, ListItem
 from time import time
-import settings, utils
+from . import settings, utils
 
 class AddonMonitor(xbmc.Monitor):
     """ Addon monitor class is used to monitor the entire addon and make changes on a global level """

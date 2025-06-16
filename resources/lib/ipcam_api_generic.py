@@ -4,13 +4,16 @@ plugin.video.surveillanceroom
 A Kodi add-on by Maikito26
 
 """
+from __future__ import absolute_import
 
-import utils, settings
+from builtins import object
+from . import utils, settings
+
 
 class GenericIPCam(object):
     '''A python implementation of a Generic IP Camera'''
 
-    def __init__(self, camera_settings, daemon = False, verbose = True):
+    def __init__(self, camera_settings, daemon=False, verbose=True):
         '''
         If ``daemon`` is True, the command will be sent unblockedly.
         '''
@@ -39,7 +42,6 @@ class GenericIPCam(object):
 
     def __enter__(self):
         return self
-    
-    def __exit__(self, exc_type, exc_value, traceback):		
-	return None
 
+    def __exit__(self, exc_type, exc_value, traceback):
+        return None

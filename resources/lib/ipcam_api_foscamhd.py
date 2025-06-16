@@ -5,36 +5,46 @@ A Kodi add-on by Maikito26
 
 This module is to exploit Foscam HD Cameras, ie FI9821W/P/HD816W/P.
 """
-
-import urllib, sys
-import xml.etree.ElementTree as ET
-from threading import Thread
-import utils, settings
+from __future__ import absolute_import
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
 import socket
+from . import utils, settings
+from threading import Thread
+import xml.etree.ElementTree as ET
+from builtins import object
+from builtins import range
+
+from future import standard_library
+standard_library.install_aliases()
 socket.setdefaulttimeout(settings.getSetting_int('request_timeout'))
-                         
+
 # Foscam error code.
-FOSCAM_SUCCESS           = 0
-ERROR_FOSCAM_FORMAT      = -1
-ERROR_FOSCAM_AUTH        = -2
-ERROR_FOSCAM_CMD         = -3  # Access deny. May the cmd is not supported.
-ERROR_FOSCAM_EXE         = -4  # CGI execute fail.
-ERROR_FOSCAM_TIMEOUT     = -5
-ERROR_FOSCAM_UNKNOWN     = -7  # -6 and -8 are reserved.
+FOSCAM_SUCCESS = 0
+ERROR_FOSCAM_FORMAT = -1
+ERROR_FOSCAM_AUTH = -2
+ERROR_FOSCAM_CMD = -3  # Access deny. May the cmd is not supported.
+ERROR_FOSCAM_EXE = -4  # CGI execute fail.
+ERROR_FOSCAM_TIMEOUT = -5
+ERROR_FOSCAM_UNKNOWN = -7  # -6 and -8 are reserved.
 ERROR_FOSCAM_UNAVAILABLE = -8  # Disconnected or not a cam.
 
+
 class FoscamError(Exception):
-    def __init__(self, code ):
+    def __init__(self, code):
         super(FoscamError, self).__init__()
         self.code = int(code)
 
     def __str__(self):
-        return  'ErrorCode: %s' % self.code
+        return 'ErrorCode: %s' % self.code
+
 
 class FoscamCamera(object):
     '''A python implementation of the foscam HD816W'''
 
-    def __init__(self, camera_settings, daemon = False, verbose = True):
+    def __init__(self, camera_settings, daemon=False, verbose=True):
         '''
         If ``daemon`` is True, the command will be sent unblockedly.
         '''
@@ -43,6 +53,7 @@ class FoscamCamera(object):
         self.port = camera_settings[2]
         self.usr = camera_settings[3]
         self.pwd = camera_settings[4]
+        self.rtsp = camera_settings[5]
         self.daemon = daemon
         self.verbose = verbose
 
@@ -53,63 +64,70 @@ class FoscamCamera(object):
 
     @property
     def video_url(self):
-	_videoUrl = "rtsp://{0}:{1}@{2}/videoMain".format(self.usr, self.pwd, self.url)
+        _videoUrl = "rtsp://{0}:{1}@{2}/videoMain".format(
+            self.usr, self.pwd, self.url)
         return _videoUrl
 
     @property
     def video_sub_url(self):
-	_videoSubUrl = "rtsp://{0}:{1}@{2}/videoSub".format(self.usr, self.pwd, self.url)
+        _videoSubUrl = "rtsp://{0}:{1}@{2}/videoSub".format(
+            self.usr, self.pwd, self.url)
         return _videoSubUrl
 
     @property
     def mjpeg_url(self):
-	_mjpegUrl = "http://{0}/cgi-bin/CGIStream.cgi?cmd={{cmd}}&usr={1}&pwd={2}&".format(self.url, self.usr, self.pwd)
-        return _mjpegUrl.format(cmd = 'GetMJStream')   #MJPEG stream is VGA resolution @ 15fps
+        _mjpegUrl = "http://{0}/cgi-bin/CGIStream.cgi?cmd={{cmd}}&usr={1}&pwd={2}&".format(
+            self.url, self.usr, self.pwd)
+        # MJPEG stream is VGA resolution @ 15fps
+        return _mjpegUrl.format(cmd='GetMJStream')
 
     @property
     def snapshot_url(self):
-	_snapshotUrl = "http://{0}/cgi-bin/CGIProxy.fcgi?cmd={{cmd}}&usr={1}&pwd={2}&".format(self.url, self.usr, self.pwd)
-        return _snapshotUrl.format(cmd = 'snapPicture2')
+        _snapshotUrl = "http://{0}/cgi-bin/CGIProxy.fcgi?cmd={{cmd}}&usr={1}&pwd={2}&".format(
+            self.url, self.usr, self.pwd)
+        return _snapshotUrl.format(cmd='snapPicture2')
 
-    
     def __enter__(self):
         return self
-    
-    def __exit__(self, exc_type, exc_value, traceback):		
-	return None
-    
-		
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        return None
+
     def send_command(self, cmd, params=None):
         '''
         Send command to foscam.
         '''
         paramstr = ''
         if params:
-            paramstr = urllib.urlencode(params)
+            paramstr = urllib.parse.urlencode(params)
             paramstr = '&' + paramstr if paramstr else ''
         cmdurl = 'http://%s/cgi-bin/CGIProxy.fcgi?usr=%s&pwd=%s&cmd=%s%s' % (
-                                                                  self.url,
-                                                                  self.usr,
-                                                                  self.pwd,
-                                                                  cmd,
-                                                                  paramstr,
-                                                                  )
+            self.url,
+            self.usr,
+            self.pwd,
+            cmd,
+            paramstr,
+        )
 
         # Parse parameters from response string.
         if self.verbose:
-            utils.log(4, 'Camera %s :: Send Foscam command: %s' %(self.number, cmdurl))
+            utils.log(
+                4, 'Camera %s :: Send Foscam command: %s' %
+                (self.number, cmdurl))
         try:
             raw_string = ''
-            raw_string = urllib.urlopen(cmdurl).read()
+            raw_string = urllib.request.urlopen(cmdurl).read()
             root = ET.fromstring(raw_string)
-        except:
+        except BaseException:
             if self.verbose:
-                utils.log(3, 'Camera %s :: Foscam exception: %s' %(self.number, raw_string))
+                utils.log(
+                    3, 'Camera %s :: Foscam exception: %s' %
+                    (self.number, raw_string))
             return ERROR_FOSCAM_UNAVAILABLE, None
         code = ERROR_FOSCAM_UNKNOWN
         params = dict()
-        
-        if utils._atleast_python27:      #Check added for compatibility with Mac/python2.6 kodi builds
+
+        if utils._atleast_python27:  # Check added for compatibility with Mac/python2.6 kodi builds
             for child in root.iter():
                 if child.tag == 'result':
                     code = int(child.text)
@@ -126,7 +144,9 @@ class FoscamCamera(object):
                     params[child.tag] = child.text
 
         if self.verbose:
-            utils.log(4, 'Camera %s :: Received Foscam response: %s, %s' %(self.number, code, params))
+            utils.log(
+                4, 'Camera %s :: Received Foscam response: %s, %s' %
+                (self.number, code, params))
         return code, params
 
     def execute_command(self, cmd, params=None, callback=None):
@@ -140,15 +160,15 @@ class FoscamCamera(object):
             return code, params
 
         if self.daemon:
-            t = Thread(target=execute_with_callbacks,
-                    args=(cmd, ), kwargs={'params':params, 'callback':callback})
+            t = Thread(target=execute_with_callbacks, args=(cmd, ),
+                       kwargs={'params': params, 'callback': callback})
             t.daemon = True
             t.start()
         else:
             return execute_with_callbacks(cmd, params, callback)
 
-        
     # *************** Device manager *******************
+
     def get_dev_state(self, callback=None):
         '''
         Get all device state
@@ -181,23 +201,23 @@ class FoscamCamera(object):
                               'time.kriss.re.kr',
                               'time.windows.com',
                               'time.nuri.net',
-                             ]:
+                              ]:
             raise ValueError('Unsupported ntpServer')
 
         params = {'timeSource': time_source,
-                  'ntpServer' : ntp_server,
+                  'ntpServer': ntp_server,
                   'dateFormat': date_format,
                   'timeFormat': time_format,
-                  'timeZone'  : time_zone,
-                  'isDst'     : is_dst,
-                  'dst'       : dst,
-                  'year'      : year,
-                  'mon'       : mon,
-                  'day'       : day,
-                  'hour'      : hour,
-                  'minute'    : minute,
-                  'sec'       : sec
-                 }
+                  'timeZone': time_zone,
+                  'isDst': is_dst,
+                  'dst': dst,
+                  'year': year,
+                  'mon': mon,
+                  'day': day,
+                  'hour': hour,
+                  'minute': minute,
+                  'sec': sec
+                  }
 
         return self.execute_command('setSystemTime', params, callback=callback)
 
@@ -231,7 +251,6 @@ class FoscamCamera(object):
         params = {'freq': mode}
         return self.execute_command('setPwrFreq', params, callback=callback)
 
-
     def get_osd_setting(self, callback=None):
         '''
         Gets the OSD setting
@@ -256,42 +275,41 @@ class FoscamCamera(object):
         '''
         params = {}
         return self.execute_command('setOSDSetting', params, callback=callback)
-    
 
     def set_ir_on(self, callback=None):
-	'''
+        '''
         Turn on the IR LED
         '''
-	return self.execute_command('openInfraLed', callback=callback)
+        return self.execute_command('openInfraLed', callback=callback)
 
     def set_ir_off(self, callback=None):
-	'''
+        '''
         Turn off the IR LED
         '''
-	return self.execute_command('closeInfraLed', callback=callback)
+        return self.execute_command('closeInfraLed', callback=callback)
 
     def get_ir_config(self, callback=None):
-	'''
+        '''
         Get IR Config
             mode:  0  Auto
                    1  Manual
         '''
-	return self.execute_command('getInfraLedConfig', callback=callback)
-
+        return self.execute_command('getInfraLedConfig', callback=callback)
 
     def set_ir_config(self, mode, callback=None):
-	'''
+        '''
         Set IR Config
             mode:  0  Auto
                    1  Manual
         '''
-	params = {'mode': mode}
-	return self.execute_command('setInfraLedConfig', params, callback=callback)
+        params = {'mode': mode}
+        return self.execute_command(
+            'setInfraLedConfig', params, callback=callback)
 
-		
     # *************** AV Settings  ******************
+
     def set_snapshot_config(self, quality, callback=None):
-	'''
+        '''
         Set snapshot config
             snapPicQuality: 0 Low quality
                             1 Normal quality
@@ -300,16 +318,16 @@ class FoscamCamera(object):
                             1 Not in use now
                             2 Upload to FTP
         '''
-	response_ok, response = self.get_snapshot_config()
-	save_location = response.get('saveLocation')
-	
-	params = {'snapPicQuality': quality,
+        response_ok, response = self.get_snapshot_config()
+        save_location = response.get('saveLocation')
+
+        params = {'snapPicQuality': quality,
                   'saveLocation': save_location}
-                    
-	self.execute_command('setSnapConfig', params, callback=callback)
-		
+
+        self.execute_command('setSnapConfig', params, callback=callback)
+
     def get_snapshot_config(self, callback=None):
-	'''
+        '''
         Get snapshot config:
             snapPicQuality: 0 Low quality
                             1 Normal quality
@@ -318,7 +336,7 @@ class FoscamCamera(object):
                             1 Not in use now
                             2 Upload to FTP
         '''
-	self.execute_command('getSnapConfig', callback=callback)
+        self.execute_command('getSnapConfig', callback=callback)
 
     def enable_mjpeg(self):
         '''
@@ -331,8 +349,7 @@ class FoscamCamera(object):
         Set the sub stream type to Motion jpeg.
         '''
         self.set_sub_video_stream_type(0)
-		
-		
+
     def get_sub_video_stream_type(self, callback=None):
         '''
         Get the stream type of sub stream.
@@ -347,7 +364,7 @@ class FoscamCamera(object):
         '''
         params = {'format': format}
         return self.execute_command('setSubVideoStreamType',
-                                        params, callback=callback)
+                                    params, callback=callback)
 
     def set_sub_stream_format(self, format, callback=None):
         '''
@@ -356,13 +373,15 @@ class FoscamCamera(object):
         '''
         params = {'format': format}
         return self.execute_command('setSubStreamFormat',
-                                        params, callback=callback)
+                                    params, callback=callback)
 
     def get_main_video_stream_type(self, callback=None):
         '''
         Get the stream type of main stream
         '''
-        return self.execute_command('getMainVideoStreamType', callback=callback)
+        return self.execute_command(
+            'getMainVideoStreamType',
+            callback=callback)
 
     def set_main_video_stream_type(self, streamtype, callback=None):
         '''
@@ -371,7 +390,7 @@ class FoscamCamera(object):
         '''
         params = {'streamType': streamtype}
         return self.execute_command('setMainVideoStreamType',
-                                        params, callback=callback)
+                                    params, callback=callback)
 
     def get_video_stream_param(self, callback=None):
         '''
@@ -380,7 +399,7 @@ class FoscamCamera(object):
         return self.execute_command('getVideoStreamParam', callback=callback)
 
     def set_video_stream_param(self, streamtype, resolution, bitrate,
-            framerate, gop, isvbr, callback=None):
+                               framerate, gop, isvbr, callback=None):
         '''
         Set the video stream param of stream N
         streamtype(0~3): Stream N.
@@ -397,11 +416,11 @@ class FoscamCamera(object):
         '''
         params = {'streamType': streamtype,
                   'resolution': resolution,
-                  'bitRate'   : bitrate,
-                  'frameRate' : framerate,
-                  'GOP'       : gop,
-                  'isVBR'     : isvbr
-                 }
+                  'bitRate': bitrate,
+                  'frameRate': framerate,
+                  'GOP': gop,
+                  'isVBR': isvbr
+                  }
         return self.execute_command('setVideoStreamParam',
                                     params, callback=callback)
 
@@ -410,15 +429,15 @@ class FoscamCamera(object):
         Mirror video
         ``is_mirror``: 0 not mirror, 1 mirror
         '''
-        if is_mirror == None:
+        if is_mirror is None:
             response_ok, response = self.get_mirror_and_flip_setting()
-            
+
             is_mirror = response.get('isMirror')
             if is_mirror == '0':
                 is_mirror = '1'
             else:
                 is_mirror = '0'
-            
+
         params = {'isMirror': is_mirror}
         return self.execute_command('mirrorVideo', params, callback=callback)
 
@@ -427,25 +446,22 @@ class FoscamCamera(object):
         Flip video
         ``is_flip``: 0 Not flip, 1 Flip
         '''
-        if is_flip == None:
+        if is_flip is None:
             response_ok, response = self.get_mirror_and_flip_setting()
-            
+
             is_flip = response.get('isFlip')
             if is_flip == '0':
                 is_flip = '1'
             else:
                 is_flip = '0'
-            
-        params = {'isFlip': is_flip }
+
+        params = {'isFlip': is_flip}
         return self.execute_command('flipVideo', params, callback=callback)
 
     def get_mirror_and_flip_setting(self, callback=None):
-        
-        return self.execute_command('getMirrorAndFlipSetting', None, callback=callback)
 
-
-
-
+        return self.execute_command(
+            'getMirrorAndFlipSetting', None, callback=callback)
 
     # *************** PTZ Control *******************
 
@@ -507,7 +523,7 @@ class FoscamCamera(object):
         '''
         Reset PT to default position.
         '''
-        
+
         return self.execute_command('ptzReset', callback=callback)
 
     def ptz_home_location(self, mode, callback=None):
@@ -516,7 +532,7 @@ class FoscamCamera(object):
             mode:  0 Return if add-on default preset point exists or not
                    1 Go to add-on default preset if it exists and no action if it doesn't
                    2 Return if add-on default preset point exists or not, and go to point if it does or camera default if it doesn't
-                   3 Reset to camera default location                   
+                   3 Reset to camera default location
         '''
 
         if mode < 3:
@@ -524,56 +540,60 @@ class FoscamCamera(object):
             try:
                 qty = int(response.get('cnt'))
                 for x in range(4, qty):
-                    point = response.get('point%d' %x)
+                    point = response.get('point%d' % x)
                     if 'surveillanceroom_default' in point:
                         if mode == 0:
                             return True
                         else:
-                            return True, self.ptz_goto_preset('surveillanceroom_default')
+                            return True, self.ptz_goto_preset(
+                                'surveillanceroom_default')
 
-            except:
+            except BaseException:
                 pass
 
             if mode == 2:
                 self.ptz_reset()
             return False
-            
+
         return self.ptz_reset()
-                    
+
     def ptz_get_preset(self, callback=None):
         '''
         Get presets.
-            cnt:      Current preset point count 
-            pointN:   The name of point N 
+            cnt:      Current preset point count
+            pointN:   The name of point N
         '''
         return self.execute_command('getPTZPresetPointList', callback=callback)
-    
+
     def ptz_goto_preset(self, name, callback=None):
         '''
         Move to preset.
-        4 points are default:  LeftMost\RightMost\TopMost\BottomMost 
+        4 points are default:  LeftMost\RightMost\TopMost\BottomMost
         '''
         params = {'name': name}
-        return self.execute_command('ptzGotoPresetPoint', params, callback=callback)
+        return self.execute_command(
+            'ptzGotoPresetPoint', params, callback=callback)
 
-    def ptz_add_preset(self, name = None, callback=None):
+    def ptz_add_preset(self, name=None, callback=None):
         '''
         Sets current position as preset point.
         - Only 16 presets in list, with 4 default.
         '''
-        if name == None:
+        if name is None:
             name = 'surveillanceroom_default'
         params = {'name': name}
-        return self.execute_command('ptzAddPresetPoint', params, callback=callback)
+        return self.execute_command(
+            'ptzAddPresetPoint', params, callback=callback)
 
-    def ptz_delete_preset(self, name = None, callback=None):
+    def ptz_delete_preset(self, name=None, callback=None):
         '''
         Delete a preset point from the preset point list.
         '''
-        if name == None:
+        if name is None:
             name = 'surveillanceroom_default'
         params = {'name': name}
-        return self.execute_command('ptzDeletePresetPoint', params, callback=callback)
+        return self.execute_command(
+            'ptzDeletePresetPoint', params, callback=callback)
 
     def get_ptz_speed(self, callback=None):
         '''
@@ -588,10 +608,10 @@ class FoscamCamera(object):
                     1  Slow
                     2  Normal speed
                     3  Fast
-                    4  Very fast 
+                    4  Very fast
         '''
-        return self.execute_command('setPTZSpeed', {'speed':speed},
-                                         callback=callback)
+        return self.execute_command('setPTZSpeed', {'speed': speed},
+                                    callback=callback)
 
     def get_ptz_selftestmode(self, callback=None):
         '''
@@ -607,9 +627,9 @@ class FoscamCamera(object):
         mode = 1: After normal selftest, then goto presetpoint-appointed
         '''
         return self.execute_command('setPTZSelfTestMode',
-                                    {'mode':mode},
+                                    {'mode': mode},
                                     callback=callback
-                                   )
+                                    )
 
     def ptz_zoom_in(self, callback=None):
         '''
@@ -648,8 +668,6 @@ class FoscamCamera(object):
         params = {'speed': speed}
         return self.execute_command('setZoomSpeed', params, callback=callback)
 
-
-    
     # *************** Alarm Function *******************
 
     def is_alarm_active(self, motion_enabled, sound_enabled):
@@ -658,34 +676,36 @@ class FoscamCamera(object):
         '''
         alarmActive = False
         success_code, response = self.get_dev_state()
-        
+
         if success_code == 0:
-            
-            for alarm, enabled in (('motionDetect', motion_enabled), ('sound', sound_enabled)):
-                
+
+            for alarm, enabled in (
+                    ('motionDetect', motion_enabled), ('sound', sound_enabled)):
+
                 if enabled:
                     param = "{0}Alarm".format(alarm)
-                    
+
                     if response[param] == '2':
                         alarmActive = True
                         break
-                    
+
             return success_code, alarmActive, alarm
-        
+
         return success_code, False, None
 
     def get_sound_detect_config(self, callback=None):
-	'''
+        '''
         Get sound detect config
         '''
-	return self.execute_command('getAudioAlarmConfig', callback=callback)
-		
+        return self.execute_command('getAudioAlarmConfig', callback=callback)
+
     def set_sound_detect_config(self, params, callback=None):
         '''
         Set sound detect config
         '''
-        return self.execute_command('setAudioAlarmConfig', params, callback=callback)
-		
+        return self.execute_command(
+            'setAudioAlarmConfig', params, callback=callback)
+
     def set_sound_detection(self, enabled=1):
         '''
         Get the current config and set the sound detection on or off
@@ -712,7 +732,7 @@ class FoscamCamera(object):
         '''
         result, current_config = self.get_sound_detect_config()
         return current_config['sensitivity']
-    
+
     def set_sound_sensitivity(self, sensitivity):
         '''
         Get the current config and set the sound detection on or off
@@ -727,7 +747,7 @@ class FoscamCamera(object):
         '''
         result, current_config = self.get_sound_detect_config()
         return current_config['triggerInterval']
-    
+
     def set_sound_triggerinterval(self, triggerInterval):
         '''
         Get the current config and set the sound detection on or off
@@ -736,20 +756,18 @@ class FoscamCamera(object):
         current_config['triggerInterval'] = triggerInterval
         self.set_sound_detect_config(current_config)
 
-        
-	
-	
     def get_motion_detect_config(self, callback=None):
         '''
         Get motion detect config
         '''
         return self.execute_command('getMotionDetectConfig', callback=callback)
- 
+
     def set_motion_detect_config(self, params, callback=None):
         '''
         Set motion detect config
         '''
-        return self.execute_command('setMotionDetectConfig', params, callback=callback)
+        return self.execute_command(
+            'setMotionDetectConfig', params, callback=callback)
 
     def set_motion_detection(self, enabled=1):
         '''
@@ -777,7 +795,7 @@ class FoscamCamera(object):
         '''
         result, current_config = self.get_motion_detect_config()
         return current_config['sensitivity']
-    
+
     def set_motion_sensitivity(self, sensitivity):
         '''
         Get the current config and set the motion detection on or off
@@ -792,7 +810,7 @@ class FoscamCamera(object):
         '''
         result, current_config = self.get_motion_detect_config()
         return current_config['triggerInterval']
-    
+
     def set_motion_triggerinterval(self, triggerInterval):
         '''
         Get the current config and set the motion detection on or off
@@ -801,35 +819,53 @@ class FoscamCamera(object):
         current_config['triggerInterval'] = triggerInterval
         self.set_motion_detect_config(current_config)
 
-    
 
 class FoscamCameraOverride(FoscamCamera):
-    def __init__(self, camera_settings, daemon = False, verbose = True):
-        super(FoscamCamera, self).init(camera_settings, daemon = False, verbose = True)
+    def __init__(self, camera_settings, daemon=False, verbose=True):
+        super(
+            FoscamCameraOverride,
+            self).__init__(
+            camera_settings,
+            daemon=False,
+            verbose=True)
+        # fix blindly derived from https://stackoverflow.com/questions/45776492
+        # "django websocker error: AttributeError: 'super' object has no attribute 'init'"
+        # as originally coded in v1.2.3:
+        # super(FoscamCamera, self).init(camera_settings, daemon = False, verbose = True)
+        # as fixed by RaysceneNS in https://github.com/RaysceneNS/plugin.video.surveillanceroom/commit/67497e485b7036adb1943c674df1d9187716d0cc
+        # FoscamCamera.__init__(self, camera_settings, daemon, verbose)
         self.camera_number = camera_settings[0]
         #self.host = camera_settings[1]
         #self.port = camera_settings[2]
         #self.usr = camera_settings[3]
         #self.pwd = camera_settings[4]
-        
-    
+        #self.rtsp = camera_settings[5]
+        # requires a new getCameraSettings rtsp= assignment in ipcam_api_wrapper
+        #  (and appending 'rtsp' to the return array)
+        # requires a new RTSP port entry in each cam# settings page
+        # requires re-"targetting" the relative comparators if that setting
+        #  is listed above the 'alarm#' enum setting
+
     @property
     def video_url(self):
         _videoUrl = settings.getSetting('stream_url', self.camera_number)
         if _videoUrl == '':
-            _videoUrl = "rtsp://{0}:{1}@{2}/videoMain".format(self.usr, self.pwd, self.url)
+            _videoUrl = "rtsp://{0}:{1}@{2}:{3}/videoMain".format(
+                self.usr, self.pwd, self.host, self.rtsp)
         return _videoUrl
 
     @property
     def mjpeg_url(self):
         _mjpegUrl = settings.getSetting('mjpeg_url', self.camera_number)
         if mjpegUrl == '':
-            _mjpegUrl = "http://{0}/cgi-bin/CGIStream.cgi?cmd={GetMJStream}&usr={1}&pwd={2}&".format(self.url, self.usr, self.pwd)
+            _mjpegUrl = "http://{0}/cgi-bin/CGIStream.cgi?cmd=GetMJStream&usr={1}&pwd={2}&".format(
+                self.url, self.usr, self.pwd)
         return _mjpegUrl
 
     @property
     def snapshot_url(self):
         _snapshotUrl = settings.getSetting('snapshot_url', self.camera_number)
         if _snapshotUrl == '':
-            _snapshotUrl = "http://{0}/cgi-bin/CGIProxy.fcgi?cmd={snapPicture2}&usr={1}&pwd={2}&".format(self.url, self.usr, self.pwd)
+            _snapshotUrl = "http://{0}/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr={1}&pwd={2}&".format(
+                self.url, self.usr, self.pwd)
         return _snapshotUrl

@@ -5,9 +5,10 @@ A Kodi add-on by Maikito26
 
 This module is used to obtain add-on settings and camera settings
 """
+from __future__ import absolute_import
 
 import xbmc, xbmcgui, xbmcaddon
-import utils
+from . import utils
 
 __addon__ = xbmcaddon.Addon()
 

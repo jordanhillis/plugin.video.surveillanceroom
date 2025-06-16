@@ -5,10 +5,12 @@ A Kodi add-on by Maikito26
 
 Module which controls how a single IP camera plays fullscreen
 """
+from __future__ import absolute_import
 
-import xbmc, xbmcgui, xbmcaddon
+from builtins import next
+import xbmc, xbmcgui, xbmcaddon, xbmcvfs
 import os
-import settings, utils, camerasettings, monitor
+from . import settings, utils, camerasettings, monitor
 from resources.lib.ipcam_api_wrapper import CameraAPIWrapper as Camera
 from resources.lib.ipcam_api_wrapper import GENERIC_IPCAM, FOSCAM_SD
 import socket
@@ -18,7 +20,7 @@ __addon__ = xbmcaddon.Addon()
 __addonid__ = __addon__.getAddonInfo('id')
 __path__ = __addon__.getAddonInfo('path')
 
-_btnimage = xbmc.translatePath('special://home/addons/%s/resources/media/{0}.png' %__addonid__ ).decode('utf-8')
+_btnimage = xbmcvfs.translatePath('special://home/addons/%s/resources/media/{0}.png' %__addonid__ )
 
 monitor = monitor.AddonMonitor()
 

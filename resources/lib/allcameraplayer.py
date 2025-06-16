@@ -5,11 +5,14 @@ A Kodi add-on by Maikito26
 
 This module is used to show all cameras on fullscreen
 """
+from __future__ import absolute_import
 
+from future import standard_library
+standard_library.install_aliases()
 import xbmc, xbmcaddon, xbmcvfs, xbmcgui
 import threading, os,  requests#, time
-from urllib import urlretrieve
-import settings, monitor, utils
+from urllib.request import urlretrieve
+from . import settings, monitor, utils
 from resources.lib.ipcam_api_wrapper import CameraAPIWrapper as Camera
 import socket
 TIMEOUT = settings.getSetting_int('request_timeout')
@@ -18,11 +21,11 @@ socket.setdefaulttimeout(TIMEOUT)
 __addon__ = xbmcaddon.Addon()
 __addonid__ = __addon__.getAddonInfo('id')
 
-_datapath = xbmc.translatePath(('special://profile/addon_data/{0}').format(__addonid__)).decode('utf-8')
-_loader = xbmc.translatePath(('special://home/addons/{0}/resources/media/loader_old.gif').format(__addonid__)).decode('utf-8')
-_error = xbmc.translatePath(('special://home/addons/{0}/resources/media/error.png').format(__addonid__)).decode('utf-8')
-_holder = xbmc.translatePath(('special://home/addons/{0}/resources/media/placeholder.jpg').format(__addonid__)).decode('utf-8')
-_black = xbmc.translatePath('special://home/addons/%s/resources/media/black.png' %__addonid__ ).decode('utf-8')
+_datapath = xbmcvfs.translatePath(('special://profile/addon_data/{0}').format(__addonid__))
+_loader = xbmcvfs.translatePath(('special://home/addons/{0}/resources/media/loader_old.gif').format(__addonid__))
+_error = xbmcvfs.translatePath(('special://home/addons/{0}/resources/media/error.png').format(__addonid__))
+_holder = xbmcvfs.translatePath(('special://home/addons/{0}/resources/media/placeholder.jpg').format(__addonid__))
+_black = xbmcvfs.translatePath('special://home/addons/%s/resources/media/black.png' %__addonid__ )
 
 ACTION_PREVIOUS_MENU = 10
 ACTION_STOP = 13
@@ -147,7 +150,7 @@ class AllCameraDisplay(xbmcgui.WindowDialog):
                     control[1].setImage(filename, useCache = False)
                     x += 1
                     
-            except Exception, e:
+            except Exception as e:
                 utils.log(3, 'Camera %s - Error on MJPEG: %s' %(camera.number, e))
                 control[0].setImage(_error, useCache = False)
                 return

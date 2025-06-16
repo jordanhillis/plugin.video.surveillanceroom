@@ -5,9 +5,11 @@ A Kodi add-on by Maikito26
 
 Supporting functions that have no dependencies from the main add-on
 """
-
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import xbmc, xbmcaddon, xbmcvfs, xbmcgui
-import os, urllib, requests, sys
+import os, urllib.request, urllib.parse, urllib.error, requests, sys
 import sqlite3 as lite
 import socket
 
@@ -15,9 +17,9 @@ import socket
 __addon__ = xbmcaddon.Addon() 
 __addonid__ = __addon__.getAddonInfo('id')
 __version__ = __addon__.getAddonInfo('version')
-__icon__  = __addon__.getAddonInfo('icon').decode("utf-8")
-__path__ = xbmc.translatePath(('special://home/addons/{0}').format(__addonid__)).decode('utf-8')  
-__data_path__ = xbmc.translatePath('special://profile/addon_data/%s' %__addonid__ ).decode('utf-8')
+__icon__  = __addon__.getAddonInfo('icon')
+__path__ = xbmcvfs.translatePath(('special://home/addons/{0}').format(__addonid__))  
+__data_path__ = xbmcvfs.translatePath('special://profile/addon_data/%s' %__addonid__ )
 __log_level__ = int(__addon__.getSetting('log_level'))
 __log_info__ = __addonid__ + ' v' + __version__ + ': '
 TIMEOUT = int(__addon__.getSetting('request_timeout'))
@@ -79,7 +81,7 @@ def cleanup_images():
     """ Final Cleanup of images when Kodi shuts down """
     
     for i in xbmcvfs.listdir(__data_path__)[1]:
-        if (i <> 'settings.xml') and (not 'fanart_camera' in i):
+        if (i != 'settings.xml') and (not 'fanart_camera' in i):
             xbmcvfs.delete(os.path.join(__data_path__, i))
             log(4, 'CLEANUP IMAGES :: %s' %i)
 
@@ -95,8 +97,8 @@ def remove_leftover_images(filename_prefix):
 def remove_cached_art(art):
     """ Removes cached art from textures database and cached folder """
     
-    _db_path = xbmc.translatePath('special://home/userdata/Database').decode('utf-8')
-    _tbn_path = xbmc.translatePath('special://home/userdata/Thumbnails').decode('utf-8')
+    _db_path = xbmcvfs.translatePath('special://home/userdata/Database').decode('utf-8')
+    _tbn_path = xbmcvfs.translatePath('special://home/userdata/Thumbnails').decode('utf-8')
     db = None
     
     try:         
@@ -119,7 +121,7 @@ def remove_cached_art(art):
         except:
             pass
         
-    except lite.Error, e:
+    except lite.Error as e:
         log(3, "Error %s:" %e.args[0])
         #sys.exit(1)
         
@@ -186,7 +188,7 @@ def get_fanart(name_or_number, new_art_url = None, update = False):
         if not xbmcvfs.exists(fanart) and new_art_url != None:            
             try:
                 log(4, 'Retrieving new Fanart for camera %s : %s' %(name_or_number, new_art_url))
-                urllib.urlretrieve(new_art_url, fanart)
+                urllib.request.urlretrieve(new_art_url, fanart)
             except:
                 log(4, 'Failed to Retrieve Snapshot from camera %s.' %name_or_number)
                 fanart = os.path.join(__path__, 'fanart.jpg')

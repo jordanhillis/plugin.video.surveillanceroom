@@ -5,11 +5,14 @@ A Kodi add-on by Maikito26
 
 This module is used to draw and show the preview window
 """
+from __future__ import absolute_import
 
+from future import standard_library
+standard_library.install_aliases()
 import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 import os, requests, time
-import utils, settings, cameraplayer, allcameraplayer, monitor
-from urllib import urlretrieve
+from . import utils, settings, cameraplayer, allcameraplayer, monitor
+from urllib.request import urlretrieve
 import threading
 import socket
 TIMEOUT = settings.getSetting_int('request_timeout')
@@ -18,10 +21,10 @@ socket.setdefaulttimeout(TIMEOUT)
 __addon__ = xbmcaddon.Addon()
 __addonid__ = __addon__.getAddonInfo('id')
 
-_black = xbmc.translatePath('special://home/addons/%s/resources/media/black.png' %__addonid__ ).decode('utf-8')
-_btnimage = xbmc.translatePath('special://home/addons/%s/resources/media/{0}.png' %__addonid__ ).decode('utf-8')
-_error = xbmc.translatePath('special://home/addons/%s/resources/media/error.png' %__addonid__ ).decode('utf-8')
-_datapath = xbmc.translatePath('special://profile/addon_data/%s' %__addonid__ ).decode('utf-8')
+_black = xbmcvfs.translatePath('special://home/addons/%s/resources/media/black.png' %__addonid__ )
+_btnimage = xbmcvfs.translatePath('special://home/addons/%s/resources/media/{0}.png' %__addonid__ )
+_error = xbmcvfs.translatePath('special://home/addons/%s/resources/media/error.png' %__addonid__ )
+_datapath = xbmcvfs.translatePath('special://profile/addon_data/%s' %__addonid__ )
 
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACKSPACE = 110
@@ -279,7 +282,7 @@ class CameraPreviewWindow(xbmcgui.WindowDialog):
                     self.img2.setImage(filename, useCache = False)
                     x += 1
                     
-            except Exception, e:
+            except Exception as e:
                 utils.log(3, 'Camera %s :: Error updating preview image on Snapshot: %s' %(self.camera.number, e))
                 self.img1.setImage(_error, useCache = False)
                 break

@@ -1,0 +1,590 @@
+# Kodi Media Center language file
+# Addon Name: Surveillance Room
+# Addon id: plugin.video.surveillanceroom
+# Addon version: 1.2.3d+matrix
+# Addon Provider: jasonbuechler
+msgid ""
+msgstr ""
+"Project-Id-Version: Kodi Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@kodi.org\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#32000"
+msgid "Surveillance Room"
+msgstr ""
+
+msgctxt "#32001"
+msgid "Camera 1"
+msgstr ""
+
+msgctxt "#32002"
+msgid "Camera 2"
+msgstr ""
+
+msgctxt "#32003"
+msgid "Camera 3"
+msgstr ""
+
+msgctxt "#32004"
+msgid "Camera 4"
+msgstr ""
+
+msgctxt "#32005"
+msgid "Camera 5"
+msgstr ""
+
+msgctxt "#32006"
+msgid "Camera 6"
+msgstr ""
+
+# empty string with id 32007
+
+# empty string with id 32008
+
+msgctxt "#32009"
+msgid "Camera 1 Enabled"
+msgstr ""
+
+msgctxt "#32010"
+msgid "Camera 2 Enabled"
+msgstr ""
+
+msgctxt "#32011"
+msgid "Camera 3 Enabled"
+msgstr ""
+
+msgctxt "#32012"
+msgid "Camera 4 Enabled"
+msgstr ""
+
+msgctxt "#32013"
+msgid "Camera 5"
+msgstr ""
+
+msgctxt "#32014"
+msgid "Camera 6"
+msgstr ""
+
+# empty string with id 32015
+
+# empty string with id 32016
+
+msgctxt "#32017"
+msgid "Preview Service Enabled"
+msgstr ""
+
+msgctxt "#32018"
+msgid "Control"
+msgstr ""
+
+msgctxt "#32019"
+msgid "Global"
+msgstr ""
+
+msgctxt "#32020"
+msgid "Update Camera Fanart"
+msgstr ""
+
+msgctxt "#32021"
+msgid "Resume Time Adjustment"
+msgstr ""
+
+msgctxt "#32022"
+msgid "PTZ Button Sensitivity"
+msgstr ""
+
+msgctxt "#32023"
+msgid "Log Level"
+msgstr ""
+
+msgctxt "#32024"
+msgid "Notifications On"
+msgstr ""
+
+msgctxt "#32025"
+msgid "Hack - Attempt to improve player control response"
+msgstr ""
+
+msgctxt "#32026"
+msgid "Timeout on Requests"
+msgstr ""
+
+msgctxt "#32027"
+msgid "All Cameras"
+msgstr ""
+
+msgctxt "#32028"
+msgid "Add-on Settings"
+msgstr ""
+
+msgctxt "#32029"
+msgid "Advanced Menu"
+msgstr ""
+
+msgctxt "#32030"
+msgid "Always"
+msgstr ""
+
+msgctxt "#32031"
+msgid "Manually"
+msgstr ""
+
+msgctxt "#32032"
+msgid "Off"
+msgstr ""
+
+msgctxt "#32033"
+msgid "Normal"
+msgstr ""
+
+msgctxt "#32034"
+msgid "Verbose"
+msgstr ""
+
+msgctxt "#32035"
+msgid "None"
+msgstr ""
+
+msgctxt "#32036"
+msgid "No Action"
+msgstr ""
+
+msgctxt "#32037"
+msgid "Preview"
+msgstr ""
+
+msgctxt "#32038"
+msgid "Duration"
+msgstr ""
+
+msgctxt "#32039"
+msgid "Debug"
+msgstr ""
+
+msgctxt "#32040"
+msgid "Dismissing affects"
+msgstr ""
+
+msgctxt "#32041"
+msgid "Time Dismissed"
+msgstr ""
+
+msgctxt "#32042"
+msgid "Resume Current Playing File after Fullscreen Preview"
+msgstr ""
+
+msgctxt "#32043"
+msgid "Play Fullscreen from Preview"
+msgstr ""
+
+# empty string with id 32044
+
+msgctxt "#32045"
+msgid "All Camera Previews"
+msgstr ""
+
+msgctxt "#32046"
+msgid "Dismissed Camera Preview Only"
+msgstr ""
+
+msgctxt "#32047"
+msgid "All Camera Player"
+msgstr ""
+
+msgctxt "#32048"
+msgid "Camera with Controls"
+msgstr ""
+
+msgctxt "#32049"
+msgid "Camera without Controls"
+msgstr ""
+
+msgctxt "#32050"
+msgid "Name"
+msgstr ""
+
+msgctxt "#32051"
+msgid "Camera Type"
+msgstr ""
+
+msgctxt "#32052"
+msgid "Host address"
+msgstr ""
+
+msgctxt "#32053"
+msgid "Port"
+msgstr ""
+
+msgctxt "#32054"
+msgid "Username"
+msgstr ""
+
+msgctxt "#32055"
+msgid "Password"
+msgstr ""
+
+msgctxt "#32056"
+msgid "Source - Player"
+msgstr ""
+
+msgctxt "#32057"
+msgid "Source - All Camera"
+msgstr ""
+
+msgctxt "#32058"
+msgid "Source - Preview"
+msgstr ""
+
+msgctxt "#32059"
+msgid "Snapshot URL"
+msgstr ""
+
+msgctxt "#32060"
+msgid "Video Stream URL"
+msgstr ""
+
+msgctxt "#32061"
+msgid "MJPEG URL"
+msgstr ""
+
+msgctxt "#32062"
+msgid "RTSP Port"
+msgstr ""
+
+# empty string with id 32063
+
+# empty string with id 32064
+
+msgctxt "#32065"
+msgid "Foscam HD"
+msgstr ""
+
+msgctxt "#32066"
+msgid "Foscam SD"
+msgstr ""
+
+msgctxt "#32067"
+msgid "Foscam Override (for C1/C2/etc)"
+msgstr ""
+
+msgctxt "#32068"
+msgid "Generic IP Camera"
+msgstr ""
+
+# empty string with id 32069
+
+# empty string with id 32070
+
+msgctxt "#32071"
+msgid "Video Stream"
+msgstr ""
+
+msgctxt "#32072"
+msgid "MJPEG"
+msgstr ""
+
+msgctxt "#32073"
+msgid "Snapshot"
+msgstr ""
+
+msgctxt "#32074"
+msgid "MJPEG - Interlaced (Flicker Reduction)"
+msgstr ""
+
+# empty string with id 32075
+
+# empty string with id 32076
+
+# empty string with id 32077
+
+# empty string with id 32078
+
+# empty string with id 32079
+
+msgctxt "#32080"
+msgid "Camera Features"
+msgstr ""
+
+msgctxt "#32081"
+msgid "Pan/Tilt/Zoom"
+msgstr ""
+
+msgctxt "#32082"
+msgid "On Connection to Camera"
+msgstr ""
+
+msgctxt "#32083"
+msgid "Alarms"
+msgstr ""
+
+msgctxt "#32084"
+msgid "Pan/Tilt"
+msgstr ""
+
+msgctxt "#32085"
+msgid "Go to Add-on Preset Point (if defined)"
+msgstr ""
+
+msgctxt "#32086"
+msgid "Reset to Default Camera Location"
+msgstr ""
+
+msgctxt "#32087"
+msgid "Motion"
+msgstr ""
+
+msgctxt "#32088"
+msgid "Motion and Sound"
+msgstr ""
+
+# empty string with id 32089
+
+msgctxt "#32090"
+msgid "Preview Settings"
+msgstr ""
+
+msgctxt "#32091"
+msgid "Activate on Motion Detection"
+msgstr ""
+
+msgctxt "#32092"
+msgid "Activate on Sound Detection"
+msgstr ""
+
+msgctxt "#32093"
+msgid "Alarm Check Interval (seconds)"
+msgstr ""
+
+msgctxt "#32094"
+msgid "Position"
+msgstr ""
+
+msgctxt "#32095"
+msgid "Scale Factor"
+msgstr ""
+
+msgctxt "#32096"
+msgid "Duration - Service (seconds)"
+msgstr ""
+
+msgctxt "#32097"
+msgid "Duration - Manual (seconds)"
+msgstr ""
+
+msgctxt "#32098"
+msgid "Close Behavior - Service"
+msgstr ""
+
+msgctxt "#32099"
+msgid "Close Behavior - Manual"
+msgstr ""
+
+msgctxt "#32100"
+msgid "Bottom Right"
+msgstr ""
+
+msgctxt "#32101"
+msgid "Bottom Left"
+msgstr ""
+
+msgctxt "#32102"
+msgid "Top Left"
+msgstr ""
+
+msgctxt "#32103"
+msgid "Top Right"
+msgstr ""
+
+msgctxt "#32104"
+msgid "Duration and no Alarm is detected"
+msgstr ""
+
+msgctxt "#32105"
+msgid "No Alarm is detected"
+msgstr ""
+
+msgctxt "#32106"
+msgid "'Opening Manually' Multiple Times"
+msgstr ""
+
+msgctxt "#32107"
+msgid "Does Nothing"
+msgstr ""
+
+msgctxt "#32108"
+msgid "Toggles Preview Open/Closed"
+msgstr ""
+
+# empty string with id 32109
+
+# empty string with id 32110
+
+msgctxt "#32111"
+msgid "Disable Preview Service on"
+msgstr ""
+
+msgctxt "#32112"
+msgid "Settings Menus"
+msgstr ""
+
+msgctxt "#32113"
+msgid "Context Menu"
+msgstr ""
+
+msgctxt "#32114"
+msgid "Home Screen"
+msgstr ""
+
+msgctxt "#32115"
+msgid "Library Navigation"
+msgstr ""
+
+msgctxt "#32116"
+msgid "System Information"
+msgstr ""
+
+msgctxt "#32117"
+msgid "Virtual Keyboard"
+msgstr ""
+
+msgctxt "#32118"
+msgid "Player Controls"
+msgstr ""
+
+msgctxt "#32119"
+msgid "Window IDs (separated by comma)"
+msgstr ""
+
+msgctxt "#32120"
+msgid "Width"
+msgstr ""
+
+msgctxt "#32121"
+msgid "Height"
+msgstr ""
+
+
+msgctxt "#32201"
+msgid "No host specified"
+msgstr ""
+
+msgctxt "#32202"
+msgid "Please check your network connection and the camera host and port. You must use an administrator account."
+msgstr ""
+
+msgctxt "#32203"
+msgid "Error sending camera command"
+msgstr ""
+
+msgctxt "#32204"
+msgid "Error configuring camera"
+msgstr ""
+
+msgctxt "#32205"
+msgid "The following characters cannot be used in the password:"
+msgstr ""
+
+msgctxt "#32206"
+msgid "The following characters cannot be used in the user name:"
+msgstr ""
+
+
+msgctxt "#32210"
+msgid "Show Preview"
+msgstr ""
+
+msgctxt "#32211"
+msgid "Enable Preview"
+msgstr ""
+
+msgctxt "32212"
+msgid "Disable Preview"
+msgstr ""
+
+msgctxt "#32213"
+msgid "Update Fanart with new Snapshot"
+msgstr ""
+
+msgctxt "#32214"
+msgid "Play Video Without Controls"
+msgstr ""
+
+msgctxt "#32215"
+msgid "Camera Settings"
+msgstr ""
+
+msgctxt "#32216"
+msgid "Reboot Camera"
+msgstr ""
+
+msgctxt "#32217"
+msgid "Toggle Previews On/Off"
+msgstr ""
+
+msgctxt "#32218"
+msgid "Camera was rebooted.  Service might need to be manually restarted before changes take effect"
+msgstr ""
+
+msgctxt "#32219"
+msgid "Camera was not rebooted.  There might be a problem communicating with this device."
+msgstr ""
+
+msgctxt "#32220"
+msgid "Some changes may not take affect until the service is restarts."
+msgstr ""
+
+msgctxt "#32221"
+msgid "Fanart Saved.  Add-on must be re-opened to take effect."
+msgstr ""
+
+msgctxt "#32222"
+msgid "Problem connecting to Camera %s"
+msgstr ""
+
+msgctxt "#32223"
+msgid "Connection restored to Camera %s"
+msgstr ""
+
+msgctxt "#32224"
+msgid "Service started."
+msgstr ""
+
+msgctxt "#32225"
+msgid "Service is restarting."
+msgstr ""
+
+msgctxt "#32226"
+msgid "Previews enabled"
+msgstr ""
+
+msgctxt "#32227"
+msgid "Previews disabled"
+msgstr ""
+
+msgctxt "#32228"
+msgid "Preview not enabled.  Enable from add-on settings."
+msgstr ""
+
+msgctxt "#33001"
+msgid "Generic: you must provide *complete* IPCam source URLs (PTZ control: none)"
+msgstr ""
+
+msgctxt "#33002"
+msgid "Override + omit URLs: use modern (h264/C1-style) addressing (PTZ: foscam only)"
+msgstr ""
+
+msgctxt "#33003"
+msgid "Override + provide URLs: ignore boxes for login/address/etc (PTZ: foscam only)"
+msgstr ""
+
+
+
+
